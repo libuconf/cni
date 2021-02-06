@@ -1,0 +1,14 @@
+# whitespace is not actually significant
+# this allows some weird things to happen
+[
+	base
+]
+key
+	=
+		value
+
+[
+	
+]
+
+a = `b` c = `d` e = f # comment to make sure it parses right

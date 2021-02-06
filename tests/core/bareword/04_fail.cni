@@ -1,0 +1,8 @@
+# there is no bareword value that would make parsing fail on its own
+# the only disallowed characters are vertical spaces (meaning the next line is the new record)
+# and comment characters (meaning everything after that starts a comment)
+# however, trying to have a vertical character in a bareword means you will not have a valid line next
+# that is what this tests
+
+key = value
+with a newline in it

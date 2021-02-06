@@ -1,0 +1,2 @@
+# let's do something that would break if we did it with barewords
+key = `raw # not a comment`

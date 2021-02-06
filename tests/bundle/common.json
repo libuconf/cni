@@ -1,0 +1,10 @@
+{
+	"key": "value",
+	"multi": "multiple word value",
+	"comment": "this variable",
+	"raw": " raw string # here ",
+	"rawesc": "raw with ` escaped",
+	"cat.key": "value",
+	"cat.subcat.key": "value",
+	"cat.subcat.key2": "value"
+}

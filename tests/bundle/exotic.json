@@ -1,0 +1,13 @@
+{
+	"base.subcat.key": "value",
+	"newlines.newlinekey": "value",
+	"newline": "value",
+	"valnl": "value starts here",
+	"keynl": "ditto",
+	"nlnl": "even this works",
+	"raw": "this works too",
+	"a": "b",
+	"c": "d",
+	"sect.a": "b",
+	"sect.c": "d"
+}

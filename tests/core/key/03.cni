@@ -1,0 +1,2 @@
+# this key contains every valid character in a cni key, except dots
+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_ = value

@@ -1,0 +1,2 @@
+# can't start and end in a dot
+.key. = value

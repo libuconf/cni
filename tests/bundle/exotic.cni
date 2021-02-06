@@ -1,0 +1,59 @@
+# there are many *additional* features that cni can make use of
+# here are some of the more exotic ones!
+
+# when writing headers, you can indent them for human readability
+# standalone comments can also be indented, as well as entries
+# consider:
+
+[base]
+	# this can be a bit confusing:
+	[base.subcat] # just because it's indented doesn't mean you can skip the full prefix
+		# like this, see?
+	# it also doesn't have to be aligned in any specific way
+		key = value
+
+# due to the potential for confusion mentioned above
+# it's not recommended that example cni files have any indentation
+
+# you can have whitespace of all kinds inside of the header
+# and for the empty header, it can be any amount of whitespace
+
+[ spaces ]
+[	tabs	]
+[
+	newlines
+] # yes even this
+
+newlinekey = value # just to demonstrate that it really works
+
+[] # empty
+[
+	
+] # also empty
+
+newline = value # ditto
+
+# similarly, you can have arbitrary whitespace between a key, the equal, and the value
+valnl =
+	value starts here # "value starts here"
+
+keynl
+	= ditto # "ditto"
+
+nlnl
+	=
+		even this works # "even this works"
+
+raw
+=
+`this works too` # "this works too"
+
+# note that this is highly discouraged,
+# since you cannot put a comment after the = but before the value, for instance
+
+# another optional feature you shouldn't depend on is multiple declarations per line
+# though all but the last one has to be a raw string, and you can't have comments until after the last one
+a = `b` c = `d`
+
+# and of course, this is just plain cursed, I'm sure you can see it
+[sect] a = `b` c = `d`

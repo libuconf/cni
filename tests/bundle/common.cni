@@ -1,0 +1,53 @@
+# this is a sample of the CNI format
+; comments start with #s and ;s
+# this file is a sample of how we *expect* people to use the file format
+# it's useful for integration tests of parsers
+
+# fundamentally, cni is a key-value store
+key = value
+
+# values are barewords, and can have multiple "words" in them
+multi = multiple word value
+
+# you can also have a comment after a bareword value, like this
+comment = this variable # will have a value of "this variable" - note the lack of the trailing space
+
+# specifically, bareword values can have any glyphs EXCEPT:
+# * vertical spaces
+# * trailing/leading horizontal space
+# * "#" (comment start) and ";" (comment start)
+# if you want anything else, you have to use raw strings, like this:
+raw = ` raw string # here ` # you can still have a comment after, has value of " raw string # here "
+
+# the only restricted character in raw strings is the ` - the initiator
+# you can still add it into a raw string by having two of them next to each other
+# it even works at the start and end!
+rawesc = `raw with `` escaped` # has the value of "raw with ` escaped"
+
+# one really powerful thing ini has (and cni doubles down on) are categories
+# in cni, categories are declared using a header, same as in ini, for example, like so:
+[cat] # you can have a comment here
+
+# every key from here on out will be prefixed with "cat."
+key = value # the key of this value is actualy "cat.key", not "key"
+
+# in fact, you can also have subcategories - with an arbitrary amount of nesting
+[cat.subcat]
+key = value # the key of this value is "cat.subcat.key"
+
+# you can reset the prefix by having an empty header
+[]
+
+# you can also skip the headers and just type the keys out
+cat.subcat.key2 = value # the key of this value is "cat.subcat.key2"
+
+# importantly, keys are very restricted
+# * they can only contain alphanumerics (a-z, A-Z, 0-9, - and _)
+# * they can also contain "."s, but they can't end on them
+# the contents of the headers are actually considered keys!
+
+# [cat.] ; invalid
+# cat.key. = value ; invalid
+
+# there's a lot more you can do with cni.
+# for that, see the "exotic" bundle

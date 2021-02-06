@@ -1,0 +1,8 @@
+# an unterminated raw string is a parse error
+raw = `
+
+# the file can *look* ok except for the mistake, but obviously isn't
+# this is one of the reasons most users should be encouraged to use barewords
+# unless you can accurately determine why it failed
+# *and* print a good error message
+# "expected to see ` but found EOF" is NOT a good error message

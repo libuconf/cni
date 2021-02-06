@@ -1,0 +1,6 @@
+# this is mostly testing for parsing failures
+# comment after section
+[sect] # comment
+[sect] #comment
+[sect]# comment
+[sect]#comment

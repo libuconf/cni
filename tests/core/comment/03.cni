@@ -1,0 +1,5 @@
+# comment after an rkv
+key1 = `value1` # comment
+key2 = `value2` #comment
+key3 = `value3`# comment
+key4 = `value4`#comment
