@@ -8,65 +8,86 @@ sub isfail ($name) {
 	return $name.contains('fail');
 }
 
-# share fail parser between fail runs
-my $failp = pCNI.new;
-
-sub TestFail ($file) {
-	my $sc = $file.slurp;
-
-	with $failp.parse($sc) -> $m {
-		say "x> $file";
-		for $m.made.kv -> $k, $v {
-			say "x found ｢$k｣ = ｢$v｣";
-		}
-	} else {
-		say "-> $file";
-	}
-}
-
-sub Test ($file) {
-	return TestFail $file if isfail $file;
-
-	my $sc = $file.slurp;
-	my $sj = $file.subst('.cni', '.json').IO.slurp;
-
-	my $p = pCNI.new;
-	my $j = from-json $sj;
-
+sub TestFail($src) {
 	my @fails;
-	with $p.parse($sc) -> $m {
-		for $j.keys -> $k {
-			my $cv = $p<<$k>> || Nil.gist;
-			my $jv = $j<<$k>>;
-			#say $m;
-			@fails.push: "x $k: expected ｢$jv｣ but found ｢$cv｣" if $cv ne $jv;
+	with pCNI.new.parse($src) -> $m {
+		@fails.push: "meant to fail, but parsed successfully";
+		for $m.made.kv -> $k, $v {
+			@fails.push: "found ｢$k｣ = ｢$v｣, expected Nil";
 		}
-	} else {
-		@fails.push: "x could not parse $file";
 	}
-
-	if @fails {
-		say "x> $file";
-		say $_ for @fails;
-		
-	} else {
-		say "-> $file";
-	}
+	return @fails;
 }
 
-sub RunRec ($dir = $*PROGRAM.dirname) {
+sub TestPass($src, %j) {
+	my @fails;
+	my $p = pCNI.new;
+	with $p.parse($src) -> $m {
+		for %j.keys -> $k {
+			my $cv = $p<<$k>> || Nil.gist;
+			my $jv = %j<<$k>>;
+			@fails.push: "$k: expected ｢$jv｣ but found ｢$cv｣" if $cv ne $jv;
+		}
+	} else {
+		@fails.push: "could not parse"
+	}
+	return @fails;
+}
+
+sub Test($file) {
+	my $sc = $file.slurp;
+	my @fails;
+	if isfail $file {
+		@fails = TestFail $sc;
+	} else {
+		my $j = from-json $file.subst('.cni', '.json').IO.slurp;
+		@fails = TestPass $sc, $j;	
+	}
+	return @fails.map: { "$file: $_"; };
+}
+
+sub Runner($dir, :$verbose) {
+	my $total = 0;
+	my $pass  = 0;
+	my @fails;
+	
 	my @todo = $dir.IO;
 	while @todo {
 		my $d = @todo.pop;
-		say '==> ', $d.Str;
 		for $d.dir -> $path {
-			Test $path if $path.ends-with('.cni');
+			if $path.ends-with('.cni') {
+				my @f = Test $path;
+				$total++;
+				
+				if @f {
+					@fails.append: @f;
+					say "x> $path" if $verbose;
+				} else {
+					$pass++;
+					say "-> $path" if $verbose;
+				}
+			}
+			
 			@todo.push: $path if $path.d;
 		}
 	}
+	return $total, $pass, @fails;
 }
 
-if ! @*ARGS {
-	@*ARGS.push: $*PROGRAM.dirname ~ '/' ~ $_ for <core ini ext>
+sub RunRec($dir = $*PROGRAM.dirname, :$verbose) {
+	say "==> $dir" if $verbose;
+	my ($total, $pass, $fails) = Runner $dir, :$verbose;
+	$*OUT.print: $total == $pass ?? '++' !! 'xx';
+	say "> $dir: $pass/$total";
+	if $fails { say "x> $_" for $fails; }
 }
-RunRec $_ for @*ARGS;
+
+sub MAIN(
+	*@files,
+	Bool :v(:$verbose)
+) {
+	if ! @files {
+		@files.push: $*PROGRAM.dirname ~ "/$_" for <core ini ext>;
+	}
+	RunRec $_, :$verbose for @files;
+}
