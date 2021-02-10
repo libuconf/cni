@@ -1,0 +1,5 @@
+a.b = a key
+
+# you can have conflicting sections and keys
+[a.b]
+key = value
