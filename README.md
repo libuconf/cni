@@ -115,8 +115,16 @@ but if your configuration primarily features things such as dates
 and you want the format detection and parsing to be done for you,
 CNI may not be for you.
 
-## Pronunciation
+## FAQ
+### Pronunciation
 "How do I pronounce CNI?!"
 
 It is correct to pronounce CNI as "seenie" (similar to "innie" for INI) or as "see-enn-aye" (letter by letter).
 Both of these are correct, and neither is preferred.
+
+### Reference Compliance
+"What is the compliance level of the reference implementation?"
+
+* `core`: compliant.
+* `ini`: compliant.
+* `ext`: flexspace, tabulation.

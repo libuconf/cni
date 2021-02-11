@@ -36,3 +36,12 @@ If you are writing an implementation, please describe its compliance as follows:
 3. Compliance for `ext` per-feature (list out every extension (basename of the files) that you are conformant to).
 
 For example:
+* `core`: 32/32, `ini`: compliant, `ext`: flexspace, tabulation.
+* `core`: compliant, `ini`: non-compliant, `ext`: none.
+* `core`: 24/32, `ini`: compliant, `ext`: flexspace.
+
+Obviously, any implementation that is not fully core compliant should not be considered finished.
+
+## Submitting Extensions
+If your implementation has an extension on top of the core language, feel free to open a PR.
+The PR should add a named feature test-case to the `ext` directory.
