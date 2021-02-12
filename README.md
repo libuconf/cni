@@ -115,6 +115,16 @@ but if your configuration primarily features things such as dates
 and you want the format detection and parsing to be done for you,
 CNI may not be for you.
 
+### XDG Desktop Files
+FreeDesktop's xdg-desktop specification specifies using `;` as a value delimeter.
+For example: `key = value1;value2;value3; ; comment only starts here`.
+
+This is an example of various INI variants being divergent.
+It would make the grammar significantly more complex to implement this, and would break compatibility with other ini-likes.
+The XDG specification also includes escaping `;`s.
+
+If you want to parse XDG Desktop files, you should use a parser made for them, and not CNI.
+
 ## FAQ
 ### Pronunciation
 "How do I pronounce CNI?!"
