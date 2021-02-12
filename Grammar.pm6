@@ -15,11 +15,11 @@ grammar gCNI {
 		['#' | ';'] \V* # until vertical space
 	}
 	token key {
-		[<[a..zA..Z0..9_\-]>+]+ % '.' # valid key characters separated by '.'
+		[<[a..zA..Z0..9_\-]>+]+ % '.' # alphanum + _- separated by '.'
 		{ make ~$/; }
 	}
 	token value {
-		[<-[\s#;]>+]* % \h+ # alnum separated by horizontal whitespace
+		[<-[\s#;]>+]* % \h+ # non-space non-keychar separated by horizontal whitespace
 		{ make ~$/; }
 	}
 	token rvalue {
