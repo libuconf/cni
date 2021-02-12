@@ -79,7 +79,7 @@ sub RunRec($dir = $*PROGRAM.dirname, :$verbose) {
 	my ($total, $pass, $fails) = Runner $dir, :$verbose;
 	$*OUT.print: $total == $pass ?? '++' !! 'xx';
 	say "> $dir: $pass/$total";
-	if $fails { say "x> $_" for $fails; }
+	if $fails { say "x> $_" for $fails.list; }
 }
 
 sub MAIN(
