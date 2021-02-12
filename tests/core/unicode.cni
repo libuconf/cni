@@ -1,0 +1,6 @@
+# you can have unicode and various special characters in values
+# we'll only test some of the more common ones
+# but technically virtually anything should be valid
+# see the grammar for more details
+key1 = 単純技術
+key2 = `単純技術`
