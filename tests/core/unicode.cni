@@ -4,3 +4,4 @@
 # see the grammar for more details
 key1 = 単純技術
 key2 = `単純技術`
+key3 = /paths\and/backslash\mix
