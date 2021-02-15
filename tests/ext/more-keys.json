@@ -1,1 +1,7 @@
-{"path/to/a/file": "some metadata","C:\\windows\\paths\\work": "too","クッキー": "nice"}
+{
+	"path/to/a/file": "some metadata",
+	"C:\\windows\\paths\\work": "too",
+	"クッキー": "nice",
+	"applie{$}%to.section~headings": "as well",
+	"applie{$}%to.do!some?funny": "things"
+}
