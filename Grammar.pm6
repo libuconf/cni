@@ -15,7 +15,7 @@ grammar gCNI {
 		['#' | ';'] \V* # until vertical space
 	}
 	token key {
-		[<-[\s#;\[\]=\.`]>+]+ % '.' # chars other than white space, "#", ";", "[", "]", "=", or "." separated by '.'
+		[<[a..zA..Z0..9_\-]>+]+ % '.' # alphanum + _- separated by '.'
 		{ make ~$/; }
 	}
 	token value {
