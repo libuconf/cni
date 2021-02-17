@@ -6,6 +6,16 @@ This document is a reading companion (rather than the source of truth) that shou
 A CNI document consists of an arbitrary amount of statements.
 A statement may either be a section declaration, key-value pair, or key-rawvalue pair.
 
+Note that it is valid to have multiple statements assigning to the same key.
+In the event this happens, the last key definition wins.
+For example,
+```
+sub.source = main.zip
+[sub]
+source = src.zip
+```
+will result in the `sub.source` key having the value of `src.zip`.
+
 ### Key
 A key is composed of alphanumeric (`[a-zA-Z0-9]`) characters, underscores, and dashes.
 Keys may contain dots, but may not start or end with them - dots semantically signify sections.
