@@ -65,23 +65,23 @@ class pCNI is Hash {
 
 	
 	# returns kv pairs of all keys in a section, with the section stripped
-	method SubRec($prefix) {
+	method SubTree($prefix) {
 		return self.sub: $prefix, /./;
 	}
 
 	# returns kv pairs of all keys directly in a section, with the section stripped
-	method SubFlat($prefix) {
+	method SubLeaves($prefix) {
 		return self.sub: $prefix, /<-[.]>/;
 	}
 
 	# returns a list of all values in a section
-	method ListRec($prefix) {
-		return self.SubRec($prefix).values.list;
+	method ListTree($prefix) {
+		return self.SubTree($prefix).values.list;
 	}
 
 	# returns a list of all values directly in the section
-	method ListFlat($prefix) {
-		return self.SubFlat($prefix).values.list;
+	method ListLeaves($prefix) {
+		return self.SubLeaves($prefix).values.list;
 	}
 
 	# you are also recommended to implement WalkFlat and WalkRec alongside the above

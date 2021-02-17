@@ -8,8 +8,8 @@ A statement may either be a section declaration, key-value pair, or key-rawvalue
 
 ### Key
 A key is composed of alphanumeric (`[a-zA-Z0-9]`) characters, underscores, and dashes.
-Keys may contain dots, but may not start or end with them.
-Two dots in a row are disallowed (due to being nonsensical), but implementations do not need to explicitly disallow them.
+Keys may contain dots, but may not start or end with them - dots semantically signify sections.
+Two dots in a row are disallowed (due to being nonsensical, it would imply a section with no name), but implementations do not need to explicitly disallow them.
 
 ### Section Declaration
 A section consists of an opening bracket (`[`), the section name, and a closing bracket (`]`).
@@ -31,18 +31,20 @@ Theoretically, this means that both values and raw values may contain arbitrary 
 Implementations are not required to validate it, though.
 
 ### Comments
-A comment starts with a `#` (note: this is expanded upon in ini-compatibility) and ends at the next newline.
-A comment may start on its own line, at any point inside of a value, after a section declaration, or after a raw value.
+A comment starts with a `#` (note: this is expanded upon in ini-compatibility) and ends at the next vertical whitespace.
+A comment may start on its own line, at any point "inside" of a value (thus ending it), after a section declaration, or after a raw value.
 It is impossible to have comments inside of a raw value, or inside of a section declaration.
 
 ## Ini-Compatibility
-For compatibility with INI, the `;` character may also be used for comments.
-In this case, anytime the `#` is a significant character in the core language, the `;` character should be as well.
+For compatibility with INI, the `;` character may also be used for comments, i.e treated as if it were a `#`.
 
 ## Extensions
-All extensions are fully optional.
-Currently, multiple of them are consequences of keeping the grammar lean, and are documented, but only parts of their behaviors are desirable.
-
+All extensions are fully optional:
+* They are not part of "CNI", but are to be considered common extensions library authors may choose to add into their libraries, or application authors choose to make use of.
+* Library authors may implement any amount of extensions they wish.
+* Application authors should only mention any extensions that are important to the functioning of their application.
+* Application end-users should not rely on any extensions being present, unless the application they use makes it clear that said extension is available.
+ 
 ### Flexspace
 In implementations with the "flexspace" extension, whitespace within statements is not significant.
 This means that you may have arbitrary whitespace (not only spaces, but also tabs, newlines, zero-width spaces, and so on) in the following locations:
@@ -52,7 +54,7 @@ This means that you may have arbitrary whitespace (not only spaces, but also tab
 
 ### Tabulation
 In implementations with the "tabulation" extension, whitespace before and after statements is not significant.
-This means you may have arbitrary whitespace in the following locations:
+This means you may have arbitrary horizontal whitespace in the following locations:
 * In front of a section declaration.
 * In front of a key-(raw)value pair.
 * In front of a comment.
@@ -70,52 +72,52 @@ Keys do not need to be ordered in any specific way, but sorting them may make im
 
 The following API endpoints provide all of this functionality:
 
-### Walk (Flat|Rec)
-WalkFlat|WalkRec takes a pattern (which may be empty) and a function.
-It will call the function with each matching key-value pair.
+### Walk (Leaves|Tree)
+WalkLeaves|WalkTree takes a pattern (which may be empty) and a function.
+It will call the function with each matching key-(raw)value pair.
 The matches are performed like so:
 1. If the pattern is empty, all keys match.
 2. If the pattern is an invalid key, no keys match.
 3. If the pattern is a valid key:
-   With the Rec variant, all keys that start with the pattern followed by a "." match.
-   With the Flat variant, all keys that start with the pattern followed by a ".", but that do not contain any additional "."s beyond those match.
+   With the Tree variant, all keys that start with the pattern followed by a "." match.
+   With the Leaves variant, all keys that start with the pattern followed by a ".", but that do not contain any additional "."s beyond those match.
 
-### List (Flat|Rec)
-ListFlat|ListRec takes a pattern and returns a list of values.
+### List (Leaves|Tree)
+ListLeaves|ListTree takes a pattern and returns a list of values.
 The list will contain all of the values (including duplicates) that match under the corresponding `Walk*` function.
 It can be implemented in pseudocode using the `Walk*` functions like so:
 
 ```
-ListFlat (pattern):
+ListLeaves (pattern):
 	var output_list
-	WalkFlat (pattern, (key, value){
+	WalkLeaves (pattern, lambda (key, value):
 		output_list.append(value)
-	})
+	)
 	return output_list
-ListRec (pattern):
+ListTree (pattern):
 	var output_list
-	WalkRec (pattern, (key, value){
+	WalkTree (pattern, lambda (key, value):
 		output_list.append(value)
-	})
+	)
 	return output_list
 ```
 
-### Sub (Flat|Rec)
-SubFlat|SubRec takes a pattern, and constructs a new trie.
-The new trie will contain all of the key-value pairs that match under the corresponding `Walk*` function, but with the pattern (and the dot immediately after it) stripped.
+### Sub (Leaves|Tree)
+SubLeaves|SubTree takes a pattern, and constructs a new trie.
+The new trie will contain all of the key-(raw)value pairs that match under the corresponding `Walk*` function, but with the pattern (and the dot immediately after it) removed.
 It can be implemented in pseudocode using the `Walk*` functions like so:
 
 ```
-SubFlat (pattern):
+SubLeaves (pattern):
 	var output_trie
-	WalkFlat (pattern, (key, value){
+	WalkLeaves (pattern, lambda (key, value):
 		output_trie[key.strip-from-start(pattern + ".")] = value
-	})
+	)
 	return output_trie
-SubRec (pattern):
+SubTree (pattern):
 	var output_trie
-	WalkRec (pattern, (key, value){
+	WalkTree (pattern, lambda (key, value):
 		output_trie[key.strip-from-start(pattern + ".")] = value
-	})
+	)
 	return output_trie
 ```
