@@ -121,3 +121,20 @@ SubTree (pattern):
 	)
 	return output_trie
 ```
+
+## Definitions
+Some terms in this document may be confusing.
+This section should clarify those.
+
+### Vertical Whitespace
+Unlike horizontal whitespace, unicode does not provide a good definition for "vertical whitespace".
+For the purposes of this document, consider it to mean the following code points:
+* U+000A Line Feed (`\n`)
+* U+000B Vertical Tabulation
+* U+000C Form Feed
+* U+000D Carriage Return (`\r`)
+* U+0085 Next Line
+* U+2028 Line Separator
+* U+2029 Paragraph Separator
+
+If the library implementer's language or regex engine provides its own vertical whitespace group (such as raku's `\v`), implementers are encouraged to use it instead of hardcoding the above list.
