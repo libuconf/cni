@@ -5,8 +5,12 @@ This document is a reading companion (rather than the source of truth) that shou
 ## Core Language
 A CNI document consists of an arbitrary amount of statements.
 A statement may either be a section declaration, key-value pair, or key-rawvalue pair.
+Whitespace between elements is not significant, meaning that unless it would be consumed otherwise (such as in a value of a key-value pair), it may be inserted whenever.
+This obviously includes empty lines, as well as prepending statements with whitespace, though more uses will be mentioned later.
 
-Note that it is valid to have multiple statements assigning to the same key.
+Note: some technically valid syntax is discouraged. Have a read through the test suite to see what is discouraged.
+Note: a comment does not count as whitespace.
+Note: it is valid to have multiple statements assigning to the same key.
 In the event this happens, the last key definition wins.
 For example,
 ```
@@ -26,16 +30,20 @@ A section consists of an opening bracket (`[`), the section name, and a closing 
 The section name may either be a valid key, or empty.
 
 Until the next section, all keys will be automatically prepended the section name and a `.`, or with nothing (if the section name is the empty string).
+Note that there may be any amount of whitespace in between the section name and the brackets.
 
 ### Key-(Raw)Value Pairs
 A key-value and key-rawvalue pair look very similar.
-It's a key, an equals, and a value, with arbitrary amounts of spaces before and after the `=`.
+It's a key, an equals, and a value, with arbitrary amounts of whitespace before and after the `=`.
 
 A value may contain any UTF-8 characters except vertical whitespace or the `#` sign (note: this is expanded upon in ini-compatibility).
 It may not start or end with whitespace, or start with a backtick.
 
 A rawvalue starts with a backtick and ends with a backtick, but may contain any UTF-8 characters besides those.
 If a backtick needs to be inserted into a raw value, a backtick may be escaped with a second one.
+
+After both a value and a rawvalue, you may have any amount of horizontal whitespace before a comment or the end of the line.
+Vertical whitespace is excluded, since that would imply the statement has ended.
 
 Theoretically, this means that both values and raw values may contain arbitrary bytes, but the specification is exclusively intended to be used with UTF-8 data.
 Implementations are not required to validate it, though.
@@ -54,22 +62,6 @@ All extensions are fully optional:
 * Library authors may implement any amount of extensions they wish.
 * Application authors should only mention any extensions that are important to the functioning of their application.
 * Application end-users should not rely on any extensions being present, unless the application they use makes it clear that said extension is available.
- 
-### Flexspace
-In implementations with the "flexspace" extension, whitespace within statements is not significant.
-This means that you may have arbitrary whitespace (not only spaces, but also tabs, newlines, zero-width spaces, and so on) in the following locations:
-* Between the opening section bracket, the section name, and the closing section bracket.
-* Between the key in a key-(raw)value pair, the `=`, and the (raw)value.
-* Between a (raw) value and a comment.
-
-### Tabulation
-In implementations with the "tabulation" extension, whitespace before and after statements is not significant.
-This means you may have arbitrary horizontal whitespace in the following locations:
-* In front of a section declaration.
-* In front of a key-(raw)value pair.
-* In front of a comment.
-* Between a key-rawvalue pair and the next statement.
-* Between a section declaration and the next statement.
 
 ## API
 This API is purely a suggestion for the sake of users - implementations may follow any scheme they wish.
@@ -112,6 +104,10 @@ ListTree (pattern):
 	return output_list
 ```
 
+### Key (Leaves|Tree)
+KeyLeaves|KeyTree takes a pattern and returns a list of keys.
+It is the converse of ListLeaves|ListTree.
+
 ### Sub (Leaves|Tree)
 SubLeaves|SubTree takes a pattern, and constructs a new trie.
 The new trie will contain all of the key-(raw)value pairs that match under the corresponding `Walk*` function, but with the pattern (and the dot immediately after it) removed.
@@ -132,9 +128,24 @@ SubTree (pattern):
 	return output_trie
 ```
 
+### Section (Leaves|Tree)
+SectionLeaves|SectionTree takes a pattern and returns a set of prefixes.
+It can be calculated roughly as follows:
+1. Get the corresponding list of KeyLeaves|KeyTree.
+2. For each key:
+	1. If the key does not contain a `.`, continue.
+	2. Remove the final `.` and all text that follows from the key.
+	3. Add the result to the result set.
+	4. Add the result to the list of keys to process.
+3. Return the resulting set.
+
 ## Definitions
 Some terms in this document may be confusing.
 This section should clarify those.
+
+### Set
+A set is like a list, but cannot contain duplicate items.
+For example, if I add "a" to an empty set twice, I end up with a set with one element: "a".
 
 ### Vertical Whitespace
 Unlike horizontal whitespace, unicode does not provide a good definition for "vertical whitespace".

@@ -84,5 +84,8 @@ class pCNI is Hash {
 		return self.SubLeaves($prefix).values.list;
 	}
 
-	# you are also recommended to implement WalkFlat and WalkRec alongside the above
+	# you are also recommended to implement the following along the same lines:
+	# WalkLeaves and WalkTree (walker pattern, takes a function/closure)
+	# KeyLeaves and KeyTree (list of actual keys)
+	# SectionLeaves and SectionTree (list of non-leaf nodes in the pseudo-trie)
 }
