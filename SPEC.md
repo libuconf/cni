@@ -105,7 +105,7 @@ ListTree (pattern):
 ```
 
 ### Key (Leaves|Tree)
-KeyLeaves|KeyTree takes a pattern and returns a list of keys.
+KeyLeaves|KeyTree takes a pattern and returns a set of keys.
 It is the converse of ListLeaves|ListTree.
 
 ### Sub (Leaves|Tree)
@@ -131,12 +131,12 @@ SubTree (pattern):
 ### Section (Leaves|Tree)
 SectionLeaves|SectionTree takes a pattern and returns a set of prefixes.
 It can be calculated roughly as follows:
-1. Get the corresponding list of KeyLeaves|KeyTree.
-2. For each key:
+1. Get the corresponding set from KeyLeaves|KeyTree.
+2. For each key in the set:
 	1. If the key does not contain a `.`, continue.
-	2. Remove the final `.` and all text that follows from the key.
+	2. Remove the final `.` and all text that follows from the key (for example, `foo.bar.baz` becomes `foo.bar`).
 	3. Add the result to the result set.
-	4. Add the result to the list of keys to process.
+	4. Add the result to the set of keys to process.
 3. Return the resulting set.
 
 ## Definitions
