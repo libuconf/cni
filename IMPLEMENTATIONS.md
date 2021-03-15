@@ -4,5 +4,5 @@ Once CNI becomes versioned, the last-known version implemented will also be reco
 
 ## Rust
 * [Johann150/cni](https://github.com/Johann150/cni/)  
-  `core`: 32/32, `ini`: fully compliant, `ext`: tabulation, flexspace  
-  No API as of now, simply populates a hashmap
+  `core`: 29/29, `ini`: fully compliant, `ext`: more-keys  
+  Implements all recommended APIs.
