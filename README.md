@@ -137,4 +137,4 @@ Both of these are correct, and neither is preferred.
 
 * `core`: compliant.
 * `ini`: compliant.
-* `ext`: flexspace, tabulation.
+* `ext`: none.

@@ -36,9 +36,9 @@ If you are writing an implementation, please describe its compliance as follows:
 3. Compliance for `ext` per-feature (list out every extension (basename of the files) that you are conformant to).
 
 For example:
-* `core`: 32/32, `ini`: compliant, `ext`: flexspace, tabulation.
+* `core`: 29/29, `ini`: compliant, `ext`: more-keys.
 * `core`: compliant, `ini`: non-compliant, `ext`: none.
-* `core`: 24/32, `ini`: compliant, `ext`: flexspace.
+* `core`: 24/29, `ini`: compliant, `ext`: more-keys.
 
 Obviously, any implementation that is not fully core compliant should not be considered finished.
 
