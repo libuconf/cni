@@ -63,6 +63,10 @@ All extensions are fully optional:
 * Application authors should only mention any extensions that are important to the functioning of their application.
 * Application end-users should not rely on any extensions being present, unless the application they use makes it clear that said extension is available.
 
+### more-keys
+If this extension is used, keys may be composed of any characters which are not whitespace, `#`, `=`, `[`, `]`, or <code>`</code>.
+The meaning and restrictions of dots are unchanged.
+
 ## API
 This API is purely a suggestion for the sake of users - implementations may follow any scheme they wish.
 

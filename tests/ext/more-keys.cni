@@ -1,0 +1,9 @@
+# keys can now also contain other characters (but never `[`, `]`, `=`, `#`, or white space; if `ini` is implemented also not `;`)
+# because raw keys also do not exist, backticks are also prohibited in keys to "fail fast"
+# ini style comments are not tested
+path/to/a/file = some metadata # wow
+C:\windows\paths\work = too
+クッキー = nice
+[applie{$}%to]
+section~headings = as well
+do!some?funny = things
