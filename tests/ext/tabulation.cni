@@ -1,8 +1,0 @@
-# you can tabulate sections
-[base]
-	[base.subcat]
-		# you an also tabulate comments
-		# and keys
-		key = value
-		# and raw values
-		rkey = `value`
