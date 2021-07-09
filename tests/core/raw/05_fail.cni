@@ -1,0 +1,3 @@
+# there can not be bare words after a raw value, this would be the next key
+# since whitespace is not significant
+key = `value` key2
